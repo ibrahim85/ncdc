@@ -12,6 +12,155 @@ import java.io.Serializable;
  */
 public class ISH {
 
+    public static String usaf(String record) {
+        String field = record.substring(4, 10);
+        return field;
+    }
+
+    public static String wban(String record) {
+        String field = record.substring(4, 10);
+        return field;
+    }
+
+    public static String wban(String record, String nil) {
+        String field = record.substring(4, 10);
+        if (field.equals("99999")) {
+            field = nil;
+        }
+        return field;
+    }
+
+    public static String year(String record) {
+        String field = record.substring(15, 19);
+        return field;
+    }
+
+    public static String month(String record) {
+        String field = record.substring(19, 21);
+        return field;
+    }
+
+    public static String day(String record) {
+        String field = record.substring(21, 23);
+        return field;
+    }
+
+    public static String hour(String record) {
+        String field = record.substring(23, 25);
+        return field;
+    }
+
+    public static String minute(String record) {
+        String field = record.substring(25, 27);
+        return field;
+    }
+
+    public static String latitude(String record) {
+        String field = record.substring(28, 34);
+        return field;
+    }
+
+    public static String longitude(String record) {
+        String field = record.substring(34, 41);
+        return field;
+    }
+
+    public static String elevation(String record) {
+        String field = record.substring(46, 51);
+        return field;
+    }
+
+    public static String windDirection(String record) {
+        String field = record.substring(60, 63);
+        return field;
+    }
+
+    public static String windDirection(String record, String nil) {
+        String field = record.substring(60, 63);
+        if (field.equals("999")) {
+            field = nil;
+        }
+        return field;
+    }
+
+    public static String windSpeed(String record) {
+        String field = record.substring(65, 69);
+        return field;
+    }
+
+    public static String windSpeed(String record, String nil) {
+        String field = record.substring(65, 69);
+        if (field.equals("9999")) {
+            field = nil;
+        }
+        return field;
+    }
+
+    public static String cloudCeiling(String record) {
+        String field = record.substring(70, 75);
+        return field;
+    }
+
+    public static String cloudCeiling(String record, String nil) {
+        String field = record.substring(70, 75);
+        if (field.equals("99999")) {
+            field = nil;
+        }
+        return field;
+    }
+
+    public static String visibility(String record) {
+        String field = record.substring(78, 84);
+        return field;
+    }
+
+    public static String visibility(String record, String nil) {
+        String field = record.substring(78, 84);
+        if (field.equals("999999")) {
+            field = nil;
+        }
+        return field;
+    }
+
+    public static String temp(String record) {
+        String field = record.substring(87, 92);
+        return field;
+    }
+
+    public static String temp(String record, String nil) {
+        String field = record.substring(87, 92);
+        if (field.equals("+9999")) {
+            field = nil;
+        }
+        return field;
+    }
+
+    public static String dewp(String record) {
+        String field = record.substring(93, 98);
+        return field;
+    }
+
+    public static String dewp(String record, String nil) {
+        String field = record.substring(93, 98);
+        if (field.equals("+9999")) {
+            field = nil;
+        }
+        return field;
+    }
+
+    public static String pressure(String record) {
+        String field = record.substring(99, 104);
+        return field;
+    }
+
+    public static String pressure(String record, String nil) {
+        String field = record.substring(99, 104);
+        if (field.equals("99999")) {
+            field = nil;
+        }
+        return field;
+    }
+
     public static ISHBasic parseBasic(String line, ISHBasic ish) {
         return ish.read(line);
     }
@@ -61,63 +210,28 @@ public class ISH {
         /** Sea Level Pressure */
         public String pressure;
 
-        private ISHBasic read(String line) {
+        private ISHBasic read(String record) {
 
             // Control Data Section
-
-            this.usaf = line.substring(4, 10);
-
-            this.wban = line.substring(10, 15);
-            if (this.wban.equals("99999")) {
-                this.wban = nil;
-            }
-
-            this.year = line.substring(15, 19);
-            this.month = line.substring(19, 21);
-            this.day = line.substring(21, 23);
-            this.hour = line.substring(23, 25);
-            this.minute = line.substring(25, 27);
-
-            this.latitude = line.substring(28, 34);
-            this.longitude = line.substring(34, 41);
-            this.elevation = line.substring(46, 51);
+            this.usaf = ISH.usaf(record);
+            this.wban = ISH.wban(record, nil);
+            this.year = ISH.year(record);
+            this.month = ISH.month(record);
+            this.day = ISH.day(record);
+            this.hour = ISH.hour(record);
+            this.minute = ISH.minute(record);
+            this.latitude = ISH.latitude(record);
+            this.longitude = ISH.longitude(record);
+            this.elevation = ISH.elevation(record);
 
             // Mandatory Data Section
-
-            this.windDirection = line.substring(60, 63);
-            if (this.windDirection.equals("999")) {
-                this.windDirection = nil;
-            }
-
-            this.windSpeed = line.substring(65, 69);
-            if (this.windSpeed.equals("9999")) {
-                this.windSpeed = nil;
-            }
-
-            this.cloudCeiling = line.substring(70, 75);
-            if (this.cloudCeiling.equals("99999")) {
-                this.cloudCeiling = nil;
-            }
-
-            this.visibility = line.substring(78, 84);
-            if (this.visibility.equals("999999")) {
-                this.visibility = nil;
-            }
-
-            this.temp = line.substring(87, 92);
-            if (this.temp.equals("9999")) {
-                this.temp = nil;
-            }
-
-            this.dewp = line.substring(93, 98);
-            if (this.dewp.equals("9999")) {
-                this.dewp = nil;
-            }
-
-            this.pressure = line.substring(99, 104);
-            if (this.pressure.equals("99999")) {
-                this.pressure = nil;
-            }
+            this.windDirection = ISH.windDirection(record, nil);
+            this.windSpeed = ISH.windSpeed(record, nil);
+            this.cloudCeiling = ISH.cloudCeiling(record, nil);
+            this.visibility = ISH.visibility(record, nil);
+            this.temp = ISH.temp(record, nil);
+            this.dewp = ISH.dewp(record, nil);
+            this.pressure = ISH.pressure(record, nil);
 
             return this;
         }
@@ -363,6 +477,9 @@ public class ISH {
             return line.substring(i + from, i + to);
         }
         return fallback;
+    }
+
+    private ISH() {
     }
 
 }
