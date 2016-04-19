@@ -1,0 +1,13 @@
+*.class
+*.jar
+*.war
+*.ear
+target/
+test-output/
+.settings
+.classpath
+.project
+
+ncdc_temp/
+ncdc_data/
+output/
