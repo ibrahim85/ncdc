@@ -12,18 +12,58 @@ import java.io.Serializable;
  */
 public class ISH {
 
+    // Used for empty, invalid or missing values
+    private static final String nil = "";
+
+    /**
+     * ISHLazy extracts fields only stores raw data and extracts fields when a
+     * method is called.
+     */
+    public static ISHLazy parseLazy(String line) {
+        return new ISHLazy(line);
+    }
+
+    /**
+     * ISHBasic extracts and stores Control and Mandatory fields.
+     */
+    public static ISHBasic parseBasic(String line) {
+        return parseBasic(line, new ISHBasic());
+    }
+
+    /**
+     * @see ISH#parseBasic(String)
+     */
+    public static ISHBasic parseBasic(String line, ISHBasic ish) {
+        return ish.read(line);
+    }
+
+    /**
+     * ISHFull extracts and stores several other additional fields in addition
+     * to Control and Mandatory fields.
+     */
+    public static ISHFull parseFull(String line) {
+        return parseFull(line, new ISHFull());
+    }
+
+    /**
+     * @see ISH#parseFull(String)
+     */
+    public static ISHFull parseFull(String line, ISHFull ish) {
+        return ish.read(line);
+    }
+
     public static String usaf(String record) {
         String field = record.substring(4, 10);
         return field;
     }
 
     public static String wban(String record) {
-        String field = record.substring(4, 10);
+        String field = record.substring(10, 15);
         return field;
     }
 
     public static String wban(String record, String nil) {
-        String field = record.substring(4, 10);
+        String field = record.substring(10, 15);
         if (field.equals("99999")) {
             field = nil;
         }
@@ -161,31 +201,101 @@ public class ISH {
         return field;
     }
 
-    public static ISHBasic parseBasic(String line, ISHBasic ish) {
-        return ish.read(line);
+    public static class ISHLazy implements Serializable {
+
+        private String data;
+
+        private ISHLazy(String data) {
+            this.data = data;
+        }
+
+        public String usaf() {
+            return ISH.usaf(data);
+        }
+
+        public String wban() {
+            return ISH.wban(data);
+        }
+
+        public String wban(String nil) {
+            return ISH.wban(data, nil);
+        }
+
+        public String year() {
+            return ISH.year(data);
+        }
+
+        public String month() {
+            return ISH.month(data);
+        }
+
+        public String day() {
+            return ISH.day(data);
+        }
+
+        public String hour() {
+            return ISH.hour(data);
+        }
+
+        public String minute() {
+            return ISH.minute(data);
+        }
+
+        public String latitude() {
+            return ISH.latitude(data);
+        }
+
+        public String longitude() {
+            return ISH.longitude(data);
+        }
+
+        public String elevation() {
+            return ISH.elevation(data);
+        }
+
+        public String windDirection() {
+            return ISH.temp(data);
+        }
+
+        public String windDirection(String nil) {
+            return ISH.windDirection(data, nil);
+        }
+
+        public String windSpeed() {
+            return ISH.temp(data);
+        }
+
+        public String windSpeed(String nil) {
+            return ISH.windSpeed(data, nil);
+        }
+
+        public String temp() {
+            return ISH.temp(data);
+        }
+
+        public String temp(String nil) {
+            return ISH.temp(data, nil);
+        }
+
+        public String dewp() {
+            return ISH.dewp(data);
+        }
+
+        public String dewp(String nil) {
+            return ISH.dewp(data, nil);
+        }
+
+        public String pressure() {
+            return ISH.pressure(data);
+        }
+
+        public String pressure(String nil) {
+            return ISH.pressure(data, nil);
+        }
+
+        private static final long serialVersionUID = 1L;
     }
 
-    public static ISHBasic parseBasic(String line) {
-        return parseBasic(line, new ISHBasic());
-    }
-
-    public static ISHFull parseFull(String line, ISHFull ish) {
-        return ish.read(line);
-    }
-
-    public static ISHFull parseFull(String line) {
-        return parseFull(line, new ISHFull());
-    }
-
-    // Used for empty, invalid or missing values
-    private static final String nil = "";
-
-    /**
-     * Includes only Control and Mandatory data sections to enhance reading
-     * performance and memory usage.
-     * 
-     * @see ISHFull
-     */
     public static class ISHBasic implements Serializable {
 
         // Control Data Section
@@ -236,12 +346,9 @@ public class ISH {
             return this;
         }
 
-        private static final long serialVersionUID = -1235118486740642778L;
+        private static final long serialVersionUID = 1L;
     }
 
-    /**
-     * @see ISHBasic
-     */
     public static class ISHFull extends ISHBasic implements Serializable {
 
         // OC1
@@ -462,7 +569,7 @@ public class ISH {
             }
         }
 
-        private static final long serialVersionUID = -2723382536800365942L;
+        private static final long serialVersionUID = 1L;
     }
 
     private static int indexOf(String line, int from, int to, String tag) {
@@ -481,5 +588,4 @@ public class ISH {
 
     private ISH() {
     }
-
 }

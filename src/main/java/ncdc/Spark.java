@@ -9,6 +9,7 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
+import ncdc.ISH.ISHLazy;
 import scala.Tuple2;
 
 /**
@@ -35,15 +36,12 @@ public class Spark {
         JavaRDD<String> input = sc.textFile(intpuFiles);
 
         // parse input
-        // JavaRDD<ISHBasic> data = input;
-        // .map(line -> ISH.parseBasic(line))
-        // .filter(d -> d != null);
-
-        JavaRDD<String> data = input;
+        JavaRDD<ISHLazy> data = input.map(line -> ISH.parseLazy(line))
+                .filter(d -> d != null);
 
         // <USAF YR MO, 1>
-        JavaPairRDD<String, Integer> operable = data.mapToPair(
-                d -> pair(ISH.usaf(d) + ISH.year(d) + ISH.month(d), 1));
+        JavaPairRDD<String, Integer> operable = data
+                .mapToPair(d -> pair(d.usaf() + d.year() + d.month(), 1));
         operable = operable.reduceByKey((m, n) -> 1);
 
         // <USAF YR, count(months)>
@@ -92,14 +90,14 @@ public class Spark {
         // .forEach(d -> System.out.println(d._2 + ": " + d._1));
 
         // applying filter using inner join
-        data = data.mapToPair(d -> pair(ISH.usaf(d) + ISH.year(d), d))
-                .join(operable).map(d -> d._2._1);
+        data = data.mapToPair(d -> pair(d.usaf() + d.year(), d)).join(operable)
+                .map(d -> d._2._1);
 
         // write filtered data
-        data.map(d -> ISH.usaf(d) + "," + ISH.year(d) + "," + ISH.month(d) + ","
-                + ISH.day(d) + "," + ISH.hour(d) + "," + ISH.temp(d) + ","
-                + ISH.dewp(d) + "," + ISH.pressure(d) + "," + ISH.windSpeed(d)
-                + "," + ISH.windDirection(d))
+        data.map(d -> d.usaf() + "," + d.year() + "," + d.month() + ","
+                + d.day() + "," + d.hour() + "," + d.minute() + "," + d.temp("")
+                + "," + d.dewp("") + "," + d.pressure("") + ","
+                + d.windSpeed("") + "," + d.windDirection(""))
                 .saveAsTextFile(outputPath + "/operable");
 
         System.out.println(data.count());
