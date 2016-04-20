@@ -16,8 +16,8 @@ public class ISH {
     private static final String nil = "";
 
     /**
-     * ISHLazy extracts fields only stores raw data and extracts fields when a
-     * method is called.
+     * ISHLazy extracts stores raw data and extracts fields when a method is
+     * called.
      */
     public static ISHLazy parseLazy(String line) {
         return new ISHLazy(line);
@@ -38,8 +38,8 @@ public class ISH {
     }
 
     /**
-     * ISHFull extracts and stores several other additional fields in addition
-     * to Control and Mandatory fields.
+     * ISHFull extracts and stores several other fields in addition to Control
+     * and Mandatory fields.
      */
     public static ISHFull parseFull(String line) {
         return parseFull(line, new ISHFull());
